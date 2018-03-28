@@ -1,5 +1,5 @@
 ---
-# tasks file for sparkfabrik.mysql
+# tasks file for mysql
 - name: Install
   apt: pkg={{ item }} state=installed
   with_items:
