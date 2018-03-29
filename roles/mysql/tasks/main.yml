@@ -1,7 +1,7 @@
 ---
 # tasks file for mysql
 - name: Install
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - mysql-server
     - mysql-client
@@ -36,3 +36,12 @@
 
 - name: Remove the MySQL test database
   mysql_db: db=test state=absent login_user="root" login_password="{{ mysql_root_password }}"
+
+#- name: create a new database with name 'testing'
+#  mysql_db: name=testing state=present login_user="root" login_password="{{ mysql_root_password }}"
+  
+- name: import database secheme similar to mysql
+  mysql_db: login_user="root" login_password="{{ mysql_root_password }}" state=import name=testing target=/root/sakila-db/sakila-schema.sql
+
+- name: Import databases to hostname.sql
+  mysql_db: login_user="root" login_password="{{ mysql_root_password }}" state=import name=testing target=/root/sakila-db/sakila-data.sql
