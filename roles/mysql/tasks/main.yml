@@ -40,8 +40,27 @@
 #- name: create a new database with name 'testing'
 #  mysql_db: name=testing state=present login_user="root" login_password="{{ mysql_root_password }}"
   
-- name: import database secheme similar to mysql
-  mysql_db: login_user="root" login_password="{{ mysql_root_password }}" state=import name=testing target=/root/sakila-db/sakila-schema.sql
+#- name: import database secheme similar to mysql
+#  mysql_db: name=sakila login_user="root" login_password="{{ mysql_root_password }}" state=import  target=sakila-schema.sql
 
-- name: Import databases to hostname.sql
-  mysql_db: login_user="root" login_password="{{ mysql_root_password }}" state=import name=testing target=/root/sakila-db/sakila-data.sql
+#- name: Import databases to hostname.sql
+#  mysql_db: name=sakila login_user="root" login_password="{{ mysql_root_password }}" state=import target=sakila-data.sql
+
+- name: copy dbs
+  copy:
+    src: "{{ item }}" 
+    dest: /tmp
+  with_items:
+    - sakila-schema.sql
+    - sakila-data.sql
+
+- name: Import Databases
+  mysql_db:
+    name: sakila
+    state: import
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    target: /tmp/{{ item }}
+  with_items:
+    - sakila-schema.sql
+    - sakila-data.sql
